@@ -3,13 +3,13 @@ package br.com.pereiraeng.geo.swing;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Iterator;
 import java.util.Map.Entry;
 
-import br.com.pereiraeng.geo.swing.objetos.GeoD;
 import br.com.pereiraeng.geo.objetos.Geo;
+import br.com.pereiraeng.geo.swing.objetos.GeoD;
 import br.com.pereiraeng.swing.LeafOM;
 import br.com.pereiraeng.swing.interfaces.Click;
 import br.com.pereiraeng.swing.interfaces.WL;

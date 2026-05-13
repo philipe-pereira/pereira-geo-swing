@@ -12,6 +12,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import br.com.pereiraeng.geo.GeoCoordinate;
+import br.com.pereiraeng.math.geometry.Coordinate;
 import br.com.pereiraeng.physics.Grandeza;
 import br.com.pereiraeng.physics.swing.MedidaInput;
 import br.com.pereiraeng.swing.Grade;

@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import br.com.pereiraeng.geo.Brasil.Estado;
 import br.com.pereiraeng.geo.GeoCoordinate;
 import br.com.pereiraeng.geo.objetos.Geo;
 import br.com.pereiraeng.geo.objetos.GeoMark;
-import br.com.pereiraeng.geo.objetos.GeoMultiString;
 import br.com.pereiraeng.geo.objetos.GeoStringMark;
 import br.com.pereiraeng.geo.objetos.GeoValue;
 import br.com.pereiraeng.geo.swing.obj.Curso;
@@ -27,7 +29,9 @@ import br.com.pereiraeng.geo.swing.obj.Rio;
 import br.com.pereiraeng.geo.swing.obj.Town;
 import br.com.pereiraeng.geo.swing.obj.TrechoVia;
 import br.com.pereiraeng.geo.swing.obj.Via;
-import br.com.pereiraeng.geo.Brasil.Estado;
+import br.com.pereiraeng.geo.swing.objetos.GeoD;
+import br.com.pereiraeng.geo.swing.objetos.GeoMultiStringD;
+import br.com.pereiraeng.geo.swing.objetos.GeoValueD;
 import br.com.pereiraeng.io.IOutils;
 import br.com.pereiraeng.xml.XMLadapter;
 
@@ -41,7 +45,7 @@ public class KMLreader extends XMLadapter {
 
 	private boolean regiao = false;
 
-	private List<Geo> geos;
+	private List<GeoD> geos;
 
 	private int freq = 1;
 
@@ -53,7 +57,7 @@ public class KMLreader extends XMLadapter {
 		this.regiao = regiao;
 	}
 
-	public List<Geo> getGeos() {
+	public List<GeoD> getGeos() {
 		return geos;
 	}
 
@@ -77,10 +81,10 @@ public class KMLreader extends XMLadapter {
 	 * </ul>
 	 */
 	public void merge() {
-		List<Geo> newList = new LinkedList<>();
+		List<GeoD> newList = new LinkedList<>();
 		HashMap<String, Integer> name2position = new HashMap<>();
 		int position = 0;
-		for (Geo g : geos) {
+		for (GeoD g : geos) {
 			String name = null;
 			if (g instanceof Curso) {
 				Curso c = (Curso) g;
@@ -95,10 +99,10 @@ public class KMLreader extends XMLadapter {
 			if (!"".equals(name)) {
 				Integer pos = name2position.get(name);
 
-				GeoMultiString<?> geoMultiString = null;
+				GeoMultiStringD<?> geoMultiString = null;
 				if (pos != null) {
 					// já existe na tabela
-					geoMultiString = (GeoMultiString<?>) newList.get(pos);
+					geoMultiString = (GeoMultiStringD<?>) newList.get(pos);
 
 					if (g instanceof Curso) {
 						Curso c = (Curso) g;
@@ -152,8 +156,8 @@ public class KMLreader extends XMLadapter {
 		for (int i = 0; i < states.length; i++) {
 			// para cada estado
 			parse(String.format("%s\\%2$s\\sede_%2$s.kml", folder, states[i]));
-			List<Geo> temp = getGeos();
-			for (Geo g : temp)
+			List<GeoD> temp = getGeos();
+			for (GeoD g : temp)
 				out.add((Town) g);
 		}
 
@@ -164,11 +168,11 @@ public class KMLreader extends XMLadapter {
 		setType(TypeGeo.VALUE);
 
 		parse(filename);
-		List<Geo> temp = getGeos();
+		List<GeoD> temp = getGeos();
 
 		// cast e repassar para o conjunto
 		List<GeoValue> out = new ArrayList<>(temp.size());
-		for (Geo g : temp)
+		for (GeoD g : temp)
 			out.add((GeoValue) g);
 		return out;
 	}
@@ -177,11 +181,11 @@ public class KMLreader extends XMLadapter {
 		setType(TypeGeo.VALUE);
 
 		parse(is);
-		List<Geo> temp = getGeos();
+		List<GeoD> temp = getGeos();
 
 		// cast e repassar para o conjunto
 		List<GeoValue> out = new ArrayList<>(temp.size());
-		for (Geo g : temp)
+		for (GeoD g : temp)
 			out.add((GeoValue) g);
 		return out;
 	}
@@ -190,7 +194,7 @@ public class KMLreader extends XMLadapter {
 
 	private transient int counter = 0;
 
-	private transient Geo geo;
+	private transient GeoD geo;
 
 	private transient String data;
 
@@ -202,7 +206,7 @@ public class KMLreader extends XMLadapter {
 
 	@Override
 	public void startDocument() throws SAXException {
-		this.geos = new LinkedList<Geo>();
+		this.geos = new LinkedList<>();
 	}
 
 	@Override
@@ -214,7 +218,7 @@ public class KMLreader extends XMLadapter {
 				this.geo = new Town();
 				break;
 			case VALUE:
-				this.geo = new GeoValue();
+				this.geo = new GeoValueD();
 				break;
 			case FRONTIER:
 				this.geo = new Frontier();
@@ -364,7 +368,7 @@ public class KMLreader extends XMLadapter {
 
 	// ============================= AUXILIARES ==============================
 
-	public static void parseCoordinate(String coordinates, Geo geo) {
+	public static void parseCoordinate(String coordinates, GeoD geo) {
 		parseCoordinate(coordinates, geo, false, -1, -1);
 	}
 

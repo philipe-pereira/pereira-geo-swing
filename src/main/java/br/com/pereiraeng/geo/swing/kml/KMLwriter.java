@@ -82,7 +82,7 @@ public class KMLwriter {
 		StringBuilder out = new StringBuilder("<Folder>\n<name>" + root.getUserObject() + "</name>\n");
 
 		// placemarks deste nó
-		List<Geo> gs = geos.get(root);
+		List<? extends Geo> gs = geos.get(root);
 		if (gs != null)
 			for (Geo g : gs)
 				out.append(g.getKML());
